@@ -20,9 +20,12 @@ def roll(sides):
     
     return { 'num': randbelow(sides) + 1 }
 
+def time_bata():
+    return datetime.datetime.now(timezone.utc).isoformat()
+
 @app.post("/post")
 def post():
-    global main_list
+    global main_list,sem
     if request.method=="POST":
        
        # can be converted into a function which will be used in other methods
@@ -43,16 +46,13 @@ def post():
                 flag=False
             else:
                 flag=True
-        
         if flag==True:
             temp_id=0
             pass
         else:
             temp_id=temp_id+1
             flag=False
-        
-        
-        temp_dict={"id":temp_id,"key":secrets.token_hex(32),"timestamp":datetime.datetime.now(timezone.utc).isoformat()}
+        temp_dict={"id":temp_id,"key":secrets.token_hex(32),"timestamp":time_bata()}
         main_list.append(temp_dict)
         sem.release()
         return temp_dict,200
@@ -60,7 +60,7 @@ def post():
         return {"err":"Parameters Not Inclucded or this resource not found"},404
     
 def exsistence_checker(input_id):
-    global main_list
+    global main_list, sem
     flag=False
     for index,i in enumerate(main_list):
         if input_id==i["id"]:
@@ -76,7 +76,7 @@ def exsistence_checker(input_id):
 
 @app.get("/post/<int:input_id>")
 def get(input_id):
-    global main_list
+    global main_list,sem
     
     if request.method=="GET":
         temp_dict=exsistence_checker(input_id)
@@ -84,18 +84,26 @@ def get(input_id):
             return {"err":"id not found"},404
         else:
             temp_dict=temp_dict[0]
-            res={"id":input_id,"timestamp":temp_dict["timestamp"],"msg":temp_dict["key"]}
+            res={"id":input_id,"timestamp":temp_dict["timestamp"],"msg":temp_dict["key"]},200
             return res,200
 
 @app.delete("/post/<int:input_id>/delete/<string:input_key>")
 def delete(input_id,input_key):
+    global main_list,sem
     if request.method=="DELETE":
-        temp_dict,index=exsistence_checker(input_id)
-        if input_id==False:
+        
+        temp_dict=exsistence_checker(input_id)
+        if temp_dict==False:
             return {"err":"id not found"},404
         else:
+            index=temp_dict[1]
             temp_dict=temp_dict[0]
-            sem.acquire()
-            
-            sem.release()
+            if temp_dict["key"]==input_key:
+               sem.acquire()
+               main_list.pop(index)
+               sem.release()
+               return {"id":input_id,"key":temp_dict["key"],"timestamp":time_bata()}
+            else:
+                return {"err":"forbidden"},403 
+        
         pass
