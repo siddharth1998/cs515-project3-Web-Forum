@@ -37,6 +37,7 @@ def post():
             return {"err":"msg not found"},400
         if type(request.json["msg"])!=str:
             return {"err":"msg value is not a str type"},400
+        print(time_bata())
         sem.acquire()
         flag=True
         for i in main_list:
@@ -52,10 +53,10 @@ def post():
         else:
             temp_id=temp_id+1
             flag=False
-        temp_dict={"id":temp_id,"key":secrets.token_hex(32),"timestamp":time_bata()}
+        temp_dict={"id":temp_id,"key":secrets.token_hex(32),"timestamp":time_bata(),"msg":request.json["msg"]}
         main_list.append(temp_dict)
         sem.release()
-        return temp_dict,200
+        return {"id":temp_dict["id"],"key":temp_dict["key"],"timestamp":temp_dict["timestamp"]},200
     else:
         return {"err":"Parameters Not Inclucded or this resource not found"},404
     
@@ -84,7 +85,7 @@ def get(input_id):
             return {"err":"id not found"},404
         else:
             temp_dict=temp_dict[0]
-            res={"id":input_id,"timestamp":temp_dict["timestamp"],"msg":temp_dict["key"]},200
+            res={"id":input_id,"timestamp":temp_dict["timestamp"],"msg":temp_dict["msg"]}
             return res,200
 
 @app.delete("/post/<int:input_id>/delete/<string:input_key>")
@@ -102,7 +103,7 @@ def delete(input_id,input_key):
                sem.acquire()
                main_list.pop(index)
                sem.release()
-               return {"id":input_id,"key":temp_dict["key"],"timestamp":time_bata()}
+               return {"id":input_id,"key":temp_dict["key"],"timestamp":temp_dict["timestamp"]}
             else:
                 return {"err":"forbidden"},403 
         
