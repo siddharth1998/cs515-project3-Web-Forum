@@ -1,4 +1,10 @@
-from flask import Flask,request
+from flask import Flask,request,jsonify
+from flask_uuid import FlaskUUID
+from uuid import uuid4
+from bson.json_util import loads
+from pymongo import MongoClient
+from mongo_setup import getCollections
+
 import threading
 import secrets
 
@@ -9,9 +15,12 @@ from datetime import timezone
 import datetime
 
 app = Flask(__name__)
+FlaskUUID(app)
 
 main_list=[]
 sem = threading.Semaphore()
+
+db = getCollections()
 
 @app.get("/random/<int:sides>")
 def roll(sides):
@@ -73,7 +82,6 @@ def exsistence_checker(input_id):
         return temp_dict,index
         # return {"err":"id not found"},404
 
-
 @app.get("/post/<int:input_id>")
 def get(input_id):
     global main_list,sem
@@ -106,4 +114,16 @@ def delete(input_id,input_key):
             else:
                 return {"err":"forbidden"},403 
         
-        pass
+@app.post('/user')
+def save_user():
+    user_json = request.json
+    db['users'].insert_one(user_json)
+    user_json['_id'] = str(user_json['_id'])
+    return {'message': 'User saved successfully!', 'user_id': user_json}, 200
+
+@app.get('/user/<uuid:id>')
+def get_user(id):
+    user = db['users'].find_one({ '_id': id })
+    print(user, type(user))
+    return loads(user), 200
+
