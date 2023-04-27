@@ -1,32 +1,21 @@
-from flask import Flask,request
+from flask import Flask, request
 from flask_uuid import FlaskUUID
-from bson.json_util import loads
 from mongo_setup import getCollections
-from validation import create_user_validation, create_post_validation
-from data import create_user_db, get_id,create_post_db,get_post_db
+from validation import create_user_validation, update_user_validation, get_user_validation, search_user_validation, ValidationError, InternalError, create_post_validation
+from data import create_user_db, update_user_db, get_user_db, find_user_db, get_id,create_post_db,get_post_db
 
 import threading
 import secrets
-import re
 
 from secrets import randbelow
-
 
 
 app = Flask(__name__)
 FlaskUUID(app)
 
-
 sem = threading.Semaphore()
 
 db = getCollections()
-
-@app.get("/random/<int:sides>")
-def roll(sides):
-    if sides <= 0:
-        return { 'err': 'need a positive number of sides' }, 400
-    
-    return { 'num': randbelow(sides) + 1 }
 
 
 
@@ -39,7 +28,7 @@ def create_post():
         sem.acquire()
         temp_dict=create_post_db(db,request)
         sem.release()
-        return {"id":temp_dict["id"],"key":temp_dict["key"],"timestamp":temp_dict["timestamp"]},200
+        return {"id": temp_dict["id"], "key": temp_dict["key"], "timestamp": temp_dict["timestamp"]}, 200
     else:
         return error_message,status_code
     
@@ -90,3 +79,31 @@ def create_user():
 # def get_user_by_id(user_id):
 #     pass
 
+@app.get('/user/<string:id>')
+def get_user(id):
+    try:
+        get_user_validation(id)
+        success, status, resp = get_user_db(db, id)
+        return resp, status
+    except (ValidationError, InternalError) as err:
+        return err.message, err.type
+    except Exception:
+        return {'message': 'Internal server error'}, 500
+
+
+@app.post('/user/search')
+def search_user():
+    try:
+        user_json = request.json
+        search_user_validation(user_json)
+        success, status, resp = find_user_db(db, user_json)
+        return resp, status
+    except (ValidationError, InternalError) as err:
+        return err.message, err.type
+    except Exception:
+        return {'message': 'Internal server error'}, 500
+
+
+# @app.get('/post/date/find')
+# def date_based_filter():
+#     try
