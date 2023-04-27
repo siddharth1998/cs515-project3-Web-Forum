@@ -55,16 +55,36 @@ def search_user_validation(user_json):
     if 'firstName' in user_json: validate_name('firstName', user_json.get('firstName', '?'))
     if 'lastName' in user_json: validate_name('lastName', user_json.get('lastName', '?'))
 
-def create_post_validation(request):
-    if len((request.json.keys()))>1 or len((request.json.keys()))==0:
+def create_post_validation(db,request):
+    if len((request.json.keys()))>3  or len((request.json.keys()))==0:
             return True,{"err":"empty body sent"},400 
     if "msg" in request.json:
-        pass
+        user_id=False
+        if "user_id" in request.json:
+            if "key" not in request.json:
+                return True,{"err":"user_id given without key"},400
+            user_id=True
+        elif "key" in request.json:
+            if "user_id" not in request.json:
+                return True,{"err":"key given without user_id"},400
+            user_id=True
+        for i in request.json.keys():
+            if i not in ["msg","user_id","key"]:
+                return True,{"err":"Unknow parameters given"},400
+        if user_id:
+            if not(db["users"].findone({"id":request.json["user_id"],"key":request.json["key"]})):
+                return False,None,200
+            else:
+                return True,{"err":"user_id and key dose not match"},403
+        else:
+            pass
     else:
         return True,{"err":"msg not found"},400
     if type(request.json["msg"])!=str:
         return True,{"err":"msg value is not a str type"},400
     return False,None,200
+
+    
 
 # def post_exsisting(db,input_id,input_key):
 #     temp_dict=db["posts"].find_one({"id":input_id})

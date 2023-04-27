@@ -23,7 +23,7 @@ db = getCollections()
 @app.post("/post")
 def create_post():
     global sem
-    is_error,error_message,status_code=create_post_validation(request)
+    is_error,error_message,status_code=create_post_validation(db,request)
     if not is_error:
         sem.acquire()
         temp_dict=create_post_db(db,request)
