@@ -72,7 +72,7 @@ def create_post_validation(db,request):
             if i not in ["msg","user_id","key"]:
                 return True,{"err":"Unknow parameters given"},400
         if user_id:
-            if not(db["users"].findone({"id":request.json["user_id"],"key":request.json["key"]})):
+            if (db["users"].find_one({"id":request.json["user_id"],"key":request.json["key"]})):
                 return False,None,200
             else:
                 return True,{"err":"user_id and key dose not match"},403
@@ -84,8 +84,6 @@ def create_post_validation(db,request):
         return True,{"err":"msg value is not a str type"},400
     return False,None,200
 
-    
-
 # def post_exsisting(db,input_id,input_key):
 #     temp_dict=db["posts"].find_one({"id":input_id})
 #     if not temp_dict:
@@ -93,3 +91,4 @@ def create_post_validation(db,request):
 #     else:
 #         if temp_dict["key"]==input_key:
 #             return False,None,200
+
