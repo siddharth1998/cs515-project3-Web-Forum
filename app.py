@@ -18,7 +18,7 @@ import datetime
 app = Flask(__name__)
 FlaskUUID(app)
 
-main_list=[]
+
 sem = threading.Semaphore()
 
 db = getCollections()
@@ -33,9 +33,19 @@ def roll(sides):
 def time_bata():
     return datetime.datetime.now(timezone.utc).isoformat()
 
+def get_id(collection_name):
+    last_id_data=db[collection_name].find_one(sort=[("id",-1)])
+    if last_id_data:
+        last_id=last_id_data["id"]
+        temp_id=last_id+1
+    else:
+        temp_id=1   
+    
+    return temp_id
+
 @app.post("/post")
 def post():
-    global main_list,sem
+    global sem
     if request.method=="POST":
        
        # can be converted into a function which will be used in other methods
@@ -48,70 +58,42 @@ def post():
         if type(request.json["msg"])!=str:
             return {"err":"msg value is not a str type"},400
         sem.acquire()
-        flag=True
-        for i in main_list:
-            
-            if "id" in i:
-                temp_id=i["id"]
-                flag=False
-            else:
-                flag=True
-        if flag==True:
-            temp_id=0
-            pass
-        else:
-            temp_id=temp_id+1
-            flag=False
-        temp_dict={"id":temp_id,"key":secrets.token_hex(32),"timestamp":time_bata()}
-        main_list.append(temp_dict)
+        temp_id=get_id("posts")   
+        temp_dict={"id":temp_id,"key":secrets.token_hex(16),"timestamp":time_bata(),"msg":request.json["msg"]}
+        db["posts"].insert_one(temp_dict)
         sem.release()
-        return temp_dict,200
+        return {"id":temp_dict["id"],"key":temp_dict["key"],"timestamp":temp_dict["timestamp"]},200
     else:
         return {"err":"Parameters Not Inclucded or this resource not found"},404
     
-def exsistence_checker(input_id):
-    global main_list, sem
-    flag=False
-    for index,i in enumerate(main_list):
-        if input_id==i["id"]:
-            flag=True
-            temp_dict=i
-            break
-    if flag==False:
-        return False
-    else:
-        return temp_dict,index
-        # return {"err":"id not found"},404
+
 
 @app.get("/post/<int:input_id>")
 def get(input_id):
-    global main_list,sem
-    
+    global sem
+
     if request.method=="GET":
-        temp_dict=exsistence_checker(input_id)
-        if temp_dict==False:
+        temp_dict=db["posts"].find_one({"id":input_id})
+        if not temp_dict:
             return {"err":"id not found"},404
         else:
-            temp_dict=temp_dict[0]
-            res={"id":input_id,"timestamp":temp_dict["timestamp"],"msg":temp_dict["key"]},200
+            res={"id":input_id,"timestamp":temp_dict["timestamp"],"msg":temp_dict["msg"]}
             return res,200
 
 @app.delete("/post/<int:input_id>/delete/<string:input_key>")
 def delete(input_id,input_key):
-    global main_list,sem
+    global sem
     if request.method=="DELETE":
         
-        temp_dict=exsistence_checker(input_id)
-        if temp_dict==False:
+        temp_dict=db["posts"].find_one({"id":input_id})
+        if not temp_dict:
             return {"err":"id not found"},404
         else:
-            index=temp_dict[1]
-            temp_dict=temp_dict[0]
             if temp_dict["key"]==input_key:
                sem.acquire()
-               main_list.pop(index)
+               db["posts"].delete_one({"id":input_id})
                sem.release()
-               return {"id":input_id,"key":temp_dict["key"],"timestamp":time_bata()}
+               return {"id":input_id,"key":temp_dict["key"],"timestamp":temp_dict["timestamp"]}
             else:
                 return {"err":"forbidden"},403 
         
