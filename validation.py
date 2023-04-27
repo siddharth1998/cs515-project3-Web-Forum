@@ -42,8 +42,8 @@ def create_user_validation(user_json):
 
 def update_user_validation(user_json):
     validate_username(user_json.get('username', '?'))
-    validate_name(user_json.get('firstName', '?'))
-    validate_name(user_json.get('lastName', '?'))
+    validate_name('firstName', user_json.get('firstName', '?'))
+    validate_name('lastName', user_json.get('lastName', '?'))
 
 
 def get_user_validation(id):
@@ -52,7 +52,24 @@ def get_user_validation(id):
 
 def search_user_validation(user_json):
     if 'username' in user_json: validate_username(user_json.get('username'))
-    if 'firstName' in user_json: validate_name(user_json.get('firstName'))
-    if 'lastName' in user_json: validate_name(user_json.get('lastName'))
+    if 'firstName' in user_json: validate_name('firstName', user_json.get('firstName', '?'))
+    if 'lastName' in user_json: validate_name('lastName', user_json.get('lastName', '?'))
 
+def create_post_validation(request):
+    if len((request.json.keys()))>1 or len((request.json.keys()))==0:
+            return True,{"err":"empty body sent"},400 
+    if "msg" in request.json:
+        pass
+    else:
+        return True,{"err":"msg not found"},400
+    if type(request.json["msg"])!=str:
+        return True,{"err":"msg value is not a str type"},400
+    return False,None,200
 
+# def post_exsisting(db,input_id,input_key):
+#     temp_dict=db["posts"].find_one({"id":input_id})
+#     if not temp_dict:
+#         return True,{"err":"id not found"},404
+#     else:
+#         if temp_dict["key"]==input_key:
+#             return False,None,200
