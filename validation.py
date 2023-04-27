@@ -55,6 +55,7 @@ def search_user_validation(user_json):
     if 'firstName' in user_json: validate_name('firstName', user_json.get('firstName', '?'))
     if 'lastName' in user_json: validate_name('lastName', user_json.get('lastName', '?'))
 
+
 def create_post_validation(request):
     if len((request.json.keys()))>1 or len((request.json.keys()))==0:
             return True,{"err":"empty body sent"},400 
@@ -65,6 +66,7 @@ def create_post_validation(request):
     if type(request.json["msg"])!=str:
         return True,{"err":"msg value is not a str type"},400
     return False,None,200
+
 
 # def post_exsisting(db,input_id,input_key):
 #     temp_dict=db["posts"].find_one({"id":input_id})
