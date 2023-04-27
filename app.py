@@ -1,12 +1,13 @@
-from flask import Flask,request,jsonify
+from flask import Flask,request
 from flask_uuid import FlaskUUID
-from uuid import uuid4
 from bson.json_util import loads
-from pymongo import MongoClient
 from mongo_setup import getCollections
+from validation import create_user_validation
+from data import create_user_db
 
 import threading
 import secrets
+import re
 
 from secrets import randbelow
 
@@ -115,15 +116,24 @@ def delete(input_id,input_key):
                 return {"err":"forbidden"},403 
         
 @app.post('/user')
-def save_user():
+def create_user():
     user_json = request.json
-    db['users'].insert_one(user_json)
-    user_json['_id'] = str(user_json['_id'])
-    return {'message': 'User saved successfully!', 'user_id': user_json}, 200
+    err, status, resp = create_user_validation(user_json)
+    if err:
+        return resp, status
 
-@app.get('/user/<uuid:id>')
-def get_user(id):
-    user = db['users'].find_one({ '_id': id })
-    print(user, type(user))
-    return loads(user), 200
+    err1, status1, resp1 = create_user_db(db, user_json.get('username', ''))
+    if err1:
+        return resp1, status1
+
+
+# @app.get('/user/<uuid:id>')
+# def get_user(id):
+#     user = db['users'].find_one({ '_id': id })
+#     print(user, type(user))
+#     return loads(user), 200
+
+
+# def get_user_by_id(user_id):
+#     pass
 
