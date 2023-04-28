@@ -124,3 +124,17 @@ def search_user():
 # def date_based_filter():
 #     try
 
+
+@app.get('/search/<string:search_text>')
+def search(search_text):
+
+    if isinstance(search_text,str):
+        # searching=db["posts"].
+        x=list(db["posts"].find({"$text": {"$search": search_text}},{"_id":0}))
+       
+        temp_dict={}
+        temp_dict["result"]=x
+        print('------',temp_dict)
+        return temp_dict,200
+    else:
+        return {"err":"search word not of type string"},400
