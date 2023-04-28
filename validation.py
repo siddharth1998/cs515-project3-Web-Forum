@@ -1,3 +1,4 @@
+import datetime
 import re
 
 
@@ -55,6 +56,12 @@ def search_user_validation(user_json):
     if 'firstName' in user_json: validate_name('firstName', user_json.get('firstName', '?'))
     if 'lastName' in user_json: validate_name('lastName', user_json.get('lastName', '?'))
 
+
+def datetime_validation(dt_str):
+    try: datetime.datetime.fromisoformat(dt_str.replace('Z', '+00:00'))
+    except Exception: raise ValidationError(400, {'message': 'date if not of valid format'})
+
+
 def create_post_validation(db,request):
     if len((request.json.keys()))>3  or len((request.json.keys()))==0:
             return True,{"err":"empty body sent"},400 
@@ -67,14 +74,6 @@ def create_post_validation(db,request):
     if type(request.json["msg"])!=str:
         return True,{"err":"msg value is not a str type"},400
     return False,None,200
-
-# def post_exsisting(db,input_id,input_key):
-#     temp_dict=db["posts"].find_one({"id":input_id})
-#     if not temp_dict:
-#         return True,{"err":"id not found"},404
-#     else:
-#         if temp_dict["key"]==input_key:
-#             return False,None,200
 
 
 def validation_user_request(db,request):
