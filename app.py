@@ -3,8 +3,6 @@ from flask_uuid import FlaskUUID
 from mongo_setup import getCollections
 from validation import create_user_validation, update_user_validation, get_user_validation, search_user_validation, ValidationError, InternalError, create_post_validation, validation_user_request
 from data import create_user_db, update_user_db, get_user_db, find_user_db, get_id, create_post_db, get_post_db, get_post_by_date_range
-
-
 import threading
 
 app = Flask(__name__)
@@ -13,7 +11,6 @@ FlaskUUID(app)
 sem = threading.Semaphore()
 
 db = getCollections()
-
 
 @app.post("/post")
 def create_post():
@@ -26,13 +23,10 @@ def create_post():
         return {"id": temp_dict["id"], "key": temp_dict["key"], "timestamp": temp_dict["timestamp"]}, 200
     else:
         return error_message,status_code
-    
-
 
 @app.get("/post/<int:input_id>")
 def get_post(input_id):
     global sem
-
     is_error,res,status_code=get_post_db(db,input_id)
     return res,status_code
 
@@ -43,8 +37,6 @@ def delete_post(input_id,input_key):
     if not temp_dict:
         return {"err":"id not found"},404
     else:
-        
-        
         if len(input_key)==24:
             user_data=db["users"].find_one({"key":input_key})
             if user_data:
@@ -66,7 +58,6 @@ def delete_post(input_id,input_key):
         
         return {"id":input_id,"key":temp_dict["key"],"timestamp":temp_dict["timestamp"]}
         
-
 
 @app.post('/user')
 def create_user():
@@ -133,14 +124,12 @@ def date_based_filter():
 
 @app.get('/search/<string:search_text>')
 def search(search_text):
-
     if isinstance(search_text,str):
         # searching=db["posts"].
         x=list(db["posts"].find({"$text": {"$search": search_text}},{"_id":0}))
        
         temp_dict={}
         temp_dict["result"]=x
-        print('------',temp_dict)
         return temp_dict,200
     else:
         return {"err":"search word not of type string"},400
