@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_uuid import FlaskUUID
 from mongo_setup import getCollections
-from validation import create_user_validation, update_user_validation, get_user_validation, search_user_validation, ValidationError, InternalError, create_post_validation
+from validation import create_user_validation, update_user_validation, get_user_validation, search_user_validation, ValidationError, InternalError, create_post_validation,validation_user_request
 from data import create_user_db, update_user_db, get_user_db, find_user_db, get_id, create_post_db, get_post_db
 
 import threading
@@ -39,19 +39,33 @@ def get_post(input_id):
 @app.delete("/post/<int:input_id>/delete/<string:input_key>")
 def delete_post(input_id,input_key):
     global sem
-    
-        
-    temp_dict=db["posts"].find_one({"id":input_id})
+    temp_dict=db["posts"].find_one({"id":input_id}) 
     if not temp_dict:
         return {"err":"id not found"},404
     else:
-        if temp_dict["key"]==input_key:
+        
+        
+        if len(input_key)==24:
+            user_data=db["users"].find_one({"key":input_key})
+            if user_data:
+                user_name=user_data["id"]
+            else:
+                return {"err":"User Key Invalid"},403
             sem.acquire()
-            db["posts"].delete_one({"id":input_id})
+            db["posts"].delete_one({"id":input_id,"user_id":user_name})
             sem.release()
-            return {"id":input_id,"key":temp_dict["key"],"timestamp":temp_dict["timestamp"]}
+        elif len(input_key)==32:
+            if temp_dict["key"]==input_key:
+                sem.acquire()
+                db["posts"].delete_one({"id":input_id})
+                sem.release()
+            else:
+                return {"err":"Invalid Post Key"},403
         else:
-            return {"err":"forbidden"},403 
+            return {"err":"Invalid Key was sent"},403
+        
+        return {"id":input_id,"key":temp_dict["key"],"timestamp":temp_dict["timestamp"]}
+        
 
 
 @app.post('/user')

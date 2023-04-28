@@ -66,7 +66,10 @@ def create_post_db(db,request):
     temp_id=get_id(db,"posts")   
     # iso_time=
     # d = datetime.datetime.strptime(iso_time, "%Y-%m-%dT%H:%M:%S.000Z")
-    temp_dict={"id":temp_id,"key":secrets.token_hex(16),"timestamp":time_bata(),"msg":request.json["msg"],"user_id":request.json["user_id"]}
+    if "user_id" in request.json.keys():
+        temp_dict={"id":temp_id,"key":secrets.token_hex(16),"timestamp":time_bata(),"msg":request.json["msg"],"user_id":request.json["user_id"]}
+    else:
+        temp_dict={"id":temp_id,"key":secrets.token_hex(16),"timestamp":time_bata(),"msg":request.json["msg"]}
     db["posts"].insert_one(temp_dict)
     return temp_dict
 
