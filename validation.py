@@ -1,3 +1,4 @@
+import datetime
 import re
 
 
@@ -54,6 +55,11 @@ def search_user_validation(user_json):
     if 'username' in user_json: validate_username(user_json.get('username'))
     if 'firstName' in user_json: validate_name('firstName', user_json.get('firstName', '?'))
     if 'lastName' in user_json: validate_name('lastName', user_json.get('lastName', '?'))
+
+
+def datetime_validation(dt_str):
+    try: datetime.datetime.fromisoformat(dt_str.replace('Z', '+00:00'))
+    except Exception: raise ValidationError(400, {'message': 'date if not of valid format'})
 
 
 def create_post_validation(request):

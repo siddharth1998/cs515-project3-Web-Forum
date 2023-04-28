@@ -2,10 +2,10 @@ from flask import Flask, request
 from flask_uuid import FlaskUUID
 from mongo_setup import getCollections
 from validation import create_user_validation, update_user_validation, get_user_validation, search_user_validation, ValidationError, InternalError, create_post_validation
-from data import create_user_db, update_user_db, get_user_db, find_user_db, get_id, create_post_db, get_post_db
+from data import create_user_db, update_user_db, get_user_db, find_user_db, get_id, create_post_db, get_post_db, \
+    get_post_by_date_range
 
 import threading
-
 
 app = Flask(__name__)
 FlaskUUID(app)
@@ -64,7 +64,7 @@ def create_user():
         return resp, status
     except (ValidationError, InternalError) as err:
         return err.message, err.type
-    except Exception:
+    except Exception as e:
         return {'message': 'Internal server error'}, 500
 
 
@@ -81,7 +81,7 @@ def update_user():
         return {'message': 'Internal server error'}, 500
 
 
-@app.get('/user/<string:id>')
+@app.get('/user/<id>')
 def get_user(id):
     try:
         get_user_validation(id)
@@ -89,7 +89,7 @@ def get_user(id):
         return resp, status
     except (ValidationError, InternalError) as err:
         return err.message, err.type
-    except Exception:
+    except Exception as e:
         return {'message': 'Internal server error'}, 500
 
 
@@ -106,7 +106,13 @@ def search_user():
         return {'message': 'Internal server error'}, 500
 
 
-# @app.get('/post/date/find')
-# def date_based_filter():
-#     try
+@app.get('/post/date-range')
+def date_based_filter():
+    try:
+        filter_json = request.json
+        return get_post_by_date_range(db, filter_json), 200
+    except (ValidationError, InternalError) as err:
+        return err.message, err.type
+    except Exception as e:
+        return {'message': 'Internal server error'}, 500
 

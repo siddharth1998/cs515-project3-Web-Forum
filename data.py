@@ -1,6 +1,7 @@
 import secrets
-from validation import ValidationError, InternalError
+from validation import datetime_validation, ValidationError, InternalError
 from helper import time_bata
+from dateutil.parser import isoparse
 import datetime
 
 
@@ -80,3 +81,22 @@ def get_post_db(db,input_id):
         return False,res,200
 
 
+def get_post_by_date_range(db, filter_json):
+    range_filter = {}
+
+    if 'startDatetime' in filter_json:
+        datetime_validation(filter_json['startDatetime'])
+        range_filter["$gt"] = filter_json['startDatetime']
+
+    if 'endDatetime' in filter_json:
+        datetime_validation(filter_json['endDatetime'])
+        range_filter["$lt"] = filter_json['endDatetime']
+
+    if not (('startDatetime' in filter_json) and ('endDatetime' in filter_json)):
+        raise ValidationError(400, {'message': 'startDatetime or endDatetime or both are required to perform filter'})
+
+    if not (isoparse(filter_json['endDatetime']).timestamp() > isoparse(filter_json['startDatetime']).timestamp()):
+        raise ValidationError(400, { 'message': 'End date should be greater than start date' })
+
+    posts = list(db['posts'].find({"timestamp": range_filter}))
+    return posts
