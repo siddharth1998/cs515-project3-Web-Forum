@@ -75,6 +75,7 @@ def create_post_validation(db,request):
         return True,{"err":"msg value is not a str type"},400
     return False,None,200
 
+
 def validation_user_request(db,request):
     user_id=False
     if "user_id" in request.json:
