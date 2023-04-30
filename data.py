@@ -62,13 +62,19 @@ def get_id(db,collection_name):
     
     return temp_id
 
+def get_username(db,request):
+    temp_user_data=db["users"].find_one({"id":request.json["user_id"]})
+    return temp_user_data["username"]
 
 def create_post_db(db,request):
     temp_id=get_id(db,"posts")   
     # iso_time=
     # d = datetime.datetime.strptime(iso_time, "%Y-%m-%dT%H:%M:%S.000Z")
+
+    #TODO check if the username exsists 
+    #TODO get the username is there 
     if "user_id" in request.json.keys():
-        temp_dict={"id":temp_id,"key":secrets.token_hex(16),"timestamp":time_bata(),"msg":request.json["msg"],"user_id":request.json["user_id"]}
+        temp_dict={"id":temp_id,"key":secrets.token_hex(16),"timestamp":time_bata(),"msg":request.json["msg"],"user_id":request.json["user_id"],"username":get_username(db,request)}
     else:
         temp_dict={"id":temp_id,"key":secrets.token_hex(16),"timestamp":time_bata(),"msg":request.json["msg"]}
     db["posts"].insert_one(temp_dict)
@@ -80,7 +86,10 @@ def get_post_db(db,input_id):
     if not temp_dict:
         return True,{"err":"id not found"},404
     else:
-        res={"id":input_id,"timestamp":temp_dict["timestamp"],"msg":temp_dict["msg"]}
+        if "user_id" in temp_dict.keys():
+            res={"id":input_id,"timestamp":temp_dict["timestamp"],"msg":temp_dict["msg"],"user_id":temp_dict["user_id"],"username":temp_dict["username"]}
+        else:
+            res={"id":input_id,"timestamp":temp_dict["timestamp"],"msg":temp_dict["msg"]}
         return False,res,200
 
 

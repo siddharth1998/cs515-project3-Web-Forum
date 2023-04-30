@@ -62,9 +62,20 @@ def datetime_validation(dt_str):
     except Exception: raise ValidationError(400, {'message': 'date if not of valid format'})
 
 
+def user_id_exist_checker(db,request):
+    user_data=db["users"].find_one({"id":request.json["user_id"]})
+    if user_data:
+        return False,None, 200
+    else:
+        return True, {"err":"The user dose not exists sending"},404
+
 def create_post_validation(db,request):
     if len((request.json.keys()))>3  or len((request.json.keys()))==0:
             return True,{"err":"empty body sent"},400 
+    if "user_id" in request.json.keys():
+        is_error,message,status_code=user_id_exist_checker(db,request)
+        if is_error:
+            return True, message, status_code
     if "msg" in request.json:
         is_error,message,status_code=validation_user_request(db,request)
         if is_error:

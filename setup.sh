@@ -27,7 +27,7 @@ location_of_python=$(which python3)
 
 echo $location_of_python
 
-apt install python3-pip -y
+# apt install python3-pip -y
 #above python pip can be removed if professor answers it 
 
 pip3 install -r requirement.txt

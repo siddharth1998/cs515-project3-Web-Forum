@@ -55,7 +55,9 @@ def delete_post(input_id,input_key):
                 return {"err":"Invalid Post Key"},403
         else:
             return {"err":"Invalid Key was sent"},403
-        
+        if "user_id" in temp_dict.keys():
+            return {"id":input_id,"key":temp_dict["key"],"timestamp":temp_dict["timestamp"],"username":temp_dict["username"],"user_id":temp_dict["user_id"]}
+
         return {"id":input_id,"key":temp_dict["key"],"timestamp":temp_dict["timestamp"]}
         
 
