@@ -6,7 +6,7 @@
 
 # $location_of_python -m flask run 
 
-exec flask run -p 5000 
+exec flask run -p 5000 &
 
 echo "Running the test.sh"
 
