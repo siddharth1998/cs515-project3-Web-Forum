@@ -147,7 +147,6 @@
 						"exec": [
 							"pm.test(\"Posts - POST - User Post without the key - /post - Test #2 \", function () {\r",
 							"    pm.response.to.have.status(400);\r",
-							"    console.log(pm.response)\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -192,7 +191,6 @@
 						"exec": [
 							"pm.test(\"Posts - POST - User Post without the id - /post - Test #4 \", function () {\r",
 							"    pm.response.to.have.status(400);\r",
-							"    console.log(pm.response)\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -237,7 +235,6 @@
 						"exec": [
 							"pm.test(\"Posts - POST - User sending the post  - /post - Test #5 \", function () {\r",
 							"    pm.response.to.have.status(200);\r",
-							"    console.log(pm.response)\r",
 							"});\r",
 							"\r",
 							"var jsonData = pm.response.json();\r",
@@ -288,7 +285,6 @@
 						"exec": [
 							"pm.test(\"Posts - POST - User Post without the key - /post - Test #2 \", function () {\r",
 							"    pm.response.to.have.status(400);\r",
-							"    console.log(pm.response)\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -325,7 +321,7 @@
 			"response": []
 		},
 		{
-			"name": "Non string in msg",
+			"name": "Posts - POST - Post with integer - /post - Test #2",
 			"event": [
 				{
 					"listen": "test",
@@ -335,7 +331,6 @@
 							"    pm.response.to.have.status(400);\r",
 							"    const temp_data=pm.response.json();\r",
 							"    pm.expect(temp_data.err).to.eql(\"msg value is not a str type\")\r",
-							"    console.log(pm.response)\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -624,7 +619,7 @@
 			"response": []
 		},
 		{
-			"name": "Posts - POST - User sending the post  - /post - Test #4 Copy",
+			"name": "Posts - POST - User sending the post  - /post - Helper test",
 			"event": [
 				{
 					"listen": "test",
@@ -632,7 +627,6 @@
 						"exec": [
 							"pm.test(\"Posts - POST - User sending the post  - /post - Test #5 \", function () {\r",
 							"    pm.response.to.have.status(200);\r",
-							"    console.log(pm.response)\r",
 							"});\r",
 							"\r",
 							"var jsonData = pm.response.json();\r",
