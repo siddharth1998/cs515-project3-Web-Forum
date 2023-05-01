@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_uuid import FlaskUUID
 from mongo_setup import getCollections
 from validation import create_user_validation, update_user_validation, get_user_validation, search_user_validation, ValidationError, InternalError, create_post_validation, validation_user_request
-from data import create_user_db, update_user_db, get_user_db, find_user_db, get_id, create_post_db, get_post_db, get_post_by_date_range
+from data import create_user_db, update_user_db, get_user_db, find_user_db, get_id, create_post_db, get_post_db, get_post_by_date_range, delete_user_db
 import threading
 
 app = Flask(__name__)
@@ -140,3 +140,13 @@ def search(search_text):
         return temp_dict,200
     else:
         return {"err":"search word not of type string"},400
+
+
+@app.delete('/user/<id>')
+def delete_user(id):
+    try:
+        success, status, resp = delete_user_db(db, id)
+        return resp, status
+    except Exception as e:
+        print(e)
+        return {'message': 'Internal server error'}, 500

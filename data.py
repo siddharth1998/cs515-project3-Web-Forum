@@ -50,6 +50,14 @@ def get_user_db(db, id):
         raise ValidationError(404, { 'message': 'User does not exist' })
 
 
+def delete_user_db(db, id):
+    existing_user = db['users'].delete_one({ 'id': id })
+    if existing_user:
+        return True, 200, {'message': 'Deletion successful'}
+    else:
+        raise ValidationError(404, {'message': 'User does not exist'})
+
+
 def find_user_db(db, user_json):
     existing_user = db['users'].find_one(user_json, { '_id': 0 })
     if existing_user:
