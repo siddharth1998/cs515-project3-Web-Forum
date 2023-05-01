@@ -2,7 +2,19 @@
 
 apt-get install gnupg
 
+cat /etc/os-release
+
+echo "*************************************************************************"
+
+cat /proc/1/cgroup
+
+echo "*************************************************************************"
+echo "*************************************************************************"
+
+
+
 apt install curl -y
+
 
 curl -fsSL https://pgp.mongodb.com/server-6.0.asc | \
    gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg \
