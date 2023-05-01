@@ -22,7 +22,7 @@ apt-get install -y mongodb-org
 
 mkdir -p /data/db
 
-mongod --fork --syslog
+mongod &
 
 location_of_python=$(which python3)
 
