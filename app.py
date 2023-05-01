@@ -72,6 +72,7 @@ def create_user():
     except (ValidationError, InternalError) as err:
         return err.message, err.type
     except Exception as e:
+        print(e)
         return {'message': 'Internal server error'}, 500
 
 
@@ -84,8 +85,9 @@ def update_user():
         return resp, status
     except (ValidationError, InternalError) as err:
         return err.message, err.type
-    except Exception:
-        return {'message': 'Internal server error'}, 500
+    except Exception as e:
+        print(e)
+        return {'message': f'Internal server error'}, 500
 
 
 @app.get('/user/<id>')
@@ -97,6 +99,7 @@ def get_user(id):
     except (ValidationError, InternalError) as err:
         return err.message, err.type
     except Exception as e:
+        print(e)
         return {'message': 'Internal server error'}, 500
 
 
@@ -109,7 +112,8 @@ def search_user():
         return resp, status
     except (ValidationError, InternalError) as err:
         return err.message, err.type
-    except Exception:
+    except Exception as e:
+        print(e)
         return {'message': 'Internal server error'}, 500
 
 
@@ -117,10 +121,11 @@ def search_user():
 def date_based_filter():
     try:
         filter_json = request.json
-        return get_post_by_date_range(db, filter_json), 200
+        return { "posts": get_post_by_date_range(db, filter_json) }, 200
     except (ValidationError, InternalError) as err:
         return err.message, err.type
     except Exception as e:
+        print(e)
         return {'message': 'Internal server error'}, 500
 
 

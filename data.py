@@ -1,6 +1,6 @@
 import secrets
 from validation import datetime_validation, ValidationError, InternalError
-from helper import time_bata
+from helper import time_bata, remove_unnecessary_keys
 from dateutil.parser import isoparse
 import datetime
 
@@ -23,17 +23,23 @@ def create_user_db(db, username):
 
 
 def update_user_db(db, key, user_json):
-    existing_user = db['users'].find_one({ 'key': key })
+    existing_user = db['users'].find_one({'key': key})
+    if user_json['username']:
+        other_user = db['users'].find_one({'key': { '$ne': key }, 'username': user_json['username'] })
+        if other_user:
+            raise ValidationError(400, {'message': 'username is already in use, please use different one'})
+
     if existing_user:
-        updated_user = db['users'].find_one_and_update({ 'key': key }, user_json, { '_id': 0 })
-        print('update user', updated_user)
+        user_json.pop('key')
+        remove_unnecessary_keys(user_json)
+        updated_user = db['users'].find_one_and_update({'key': key}, { "$set": user_json }, {'_id': 0})
         # TODO: Check the value of updated_user
         if updated_user:
-            return True, 200, { 'message': 'Updated user metadata successfully' }
+            return True, 200, {'message': 'Updated user metadata successfully'}
         else:
-            raise InternalError(400, {'message': 'Unable to update the record'})
+            raise InternalError(500, {'message': 'Unable to update the record'})
     else:
-        raise ValidationError(404, { 'message': 'User does not exist' })
+        raise ValidationError(404, {'message': 'User does not exist with the given key'})
 
 
 def get_user_db(db, id):
@@ -104,11 +110,12 @@ def get_post_by_date_range(db, filter_json):
         datetime_validation(filter_json['endDatetime'])
         range_filter["$lt"] = filter_json['endDatetime']
 
-    if not (('startDatetime' in filter_json) and ('endDatetime' in filter_json)):
+    if not (('startDatetime' in filter_json) or ('endDatetime' in filter_json)):
         raise ValidationError(400, {'message': 'startDatetime or endDatetime or both are required to perform filter'})
 
-    if not (isoparse(filter_json['endDatetime']).timestamp() > isoparse(filter_json['startDatetime']).timestamp()):
-        raise ValidationError(400, { 'message': 'End date should be greater than start date' })
+    if ('startDatetime' in filter_json) and ('endDatetime' in filter_json):
+        if not (isoparse(filter_json['endDatetime']).timestamp() > isoparse(filter_json['startDatetime']).timestamp()):
+            raise ValidationError(400, { 'message': 'End date should be greater than start date' })
 
-    posts = list(db['posts'].find({"timestamp": range_filter}))
+    posts = list(db['posts'].find({"timestamp": range_filter}, { '_id': 0 }))
     return posts

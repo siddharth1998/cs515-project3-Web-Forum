@@ -26,7 +26,7 @@ def validate_username(username):
 
 def validate_name(key, name):
     if (len(name) < 5) or (len(name) > 30):
-        raise ValidationError(400, { 'message': f'{key} needs a between length of 5 to 30 characters' })
+        raise ValidationError(400, { 'message': f'{key} needs to be between the length of 5 to 30 characters' })
 
     if not re.match("^[a-zA-Z ]+$", name):
         raise ValidationError(400, { 'message': f'{key} can have only letters, digits, underscore, . or - characters' })
@@ -37,11 +37,19 @@ def validate_user_id(id):
         raise ValidationError(400, {'message': 'The user id is invalid' })
 
 
+def validate_user_key(key):
+    if (len(key) < 24) or (len(key) > 24):
+        raise ValidationError(400, {'message': 'The user key is invalid' })
+
+
 def create_user_validation(user_json):
     validate_username(user_json.get('username', '?'))
 
 
 def update_user_validation(user_json):
+    if 'key' not in user_json:
+        raise ValidationError(400, {'message': 'user key required to make changes to user metadata'})
+    validate_user_key(user_json.get('key', '?'))
     validate_username(user_json.get('username', '?'))
     validate_name('firstName', user_json.get('firstName', '?'))
     validate_name('lastName', user_json.get('lastName', '?'))
@@ -59,7 +67,7 @@ def search_user_validation(user_json):
 
 def datetime_validation(dt_str):
     try: datetime.datetime.fromisoformat(dt_str.replace('Z', '+00:00'))
-    except Exception: raise ValidationError(400, {'message': 'date if not of valid format'})
+    except Exception: raise ValidationError(400, {'message': 'date is not of valid format'})
 
 
 def user_id_exist_checker(db,request):
