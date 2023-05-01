@@ -1,0 +1,754 @@
+{
+	"info": {
+		"_postman_id": "b40fa00d-7431-4567-8c9e-b9864e0bf942",
+		"name": "cs515",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6237588",
+		"_collection_link": "https://bold-flare-578532.postman.co/workspace/My-Workspace~9060e8d7-ac65-4088-8a83-20315127e5a9/collection/12623814-b40fa00d-7431-4567-8c9e-b9864e0bf942?action=share&creator=6237588&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Posts - POST - Create Posts - /post - Test #1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Posts - POST - Create Posts - /post - Test #1 \", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.environment.set(\"p_id\", jsonData.id);\r",
+							"pm.environment.set(\"p_key\",jsonData.key);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"msg\":\"hi there\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/post",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete - DELETE - Valid post key - /post/{{p_id}}/delete/{{key}} - Deleting created post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete - DELETE - Valid post key - /post/{{p_id}}/delete/{{key}} - Test #3 \", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/post/{{p_id}}/delete/{{p_key}}",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"post",
+						"{{p_id}}",
+						"delete",
+						"{{p_key}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User - POST - Create user - Test #2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create User: creates a user record\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.environment.set(\"uid\",jsonData.id)",
+							"pm.environment.set(\"ukey\", jsonData.key);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"godfathersiddharthjain1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/user",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Posts - POST - User Post without the key - /post - Test #3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Posts - POST - User Post without the key - /post - Test #2 \", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"    console.log(pm.response)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"msg\":\"hi there\",\r\n  \"user_id\": {{uid}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/post",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Posts - POST - User Post without the id - /post - Test #4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Posts - POST - User Post without the id - /post - Test #4 \", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"    console.log(pm.response)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"msg\":\"hi there\",\r\n  \"key\":\"{{ukey}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/post",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Posts - POST - User sending the post  - /post - Test #4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Posts - POST - User sending the post  - /post - Test #5 \", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    console.log(pm.response)\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.environment.set(\"p_id\", jsonData.id);\r",
+							"pm.environment.set(\"p_key\",jsonData.key);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"msg\":\"hi there\",\r\n  \"key\":\"{{ukey}}\",\r\n  \"user_id\":\"{{uid}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/post",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Posts - POST - User Post without body - /post - Test #2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Posts - POST - User Post without the key - /post - Test #2 \", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"    console.log(pm.response)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/post",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Non string in msg",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Posts - POST - Post with integer - /post - Test #2 \", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"    const temp_data=pm.response.json();\r",
+							"    pm.expect(temp_data.err).to.eql(\"msg value is not a str type\")\r",
+							"    console.log(pm.response)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"msg\":101\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/post",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Viewing - GET - User sending the post  - /post/{{p_id}} - Test #1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Posts - GET - User sending the post  - /post/{{p_id}} - Test #6 \", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    const temp_data=pm.response.json();\r",
+							"    pm.expect(temp_data.id).to.eql(pm.environment.get(\"p_id\"))\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/post/{{p_id}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"post",
+						"{{p_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Viewing- GET - User sending the post  - /post/{{p_id}} - Test #2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Posts - GET - Sending not exsisting file - /post/{{p_id}} - Test #6 \", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"    const temp_data=pm.response.json();\r",
+							"    pm.expect(temp_data.err).to.eql(\"id not found\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/post/100000000",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"post",
+						"100000000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - GET - Searching key which is not there - /search/```@ - Test #1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Search - GET - Searching key which is not there - /search/```@ - Test #1 \", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    const tempData=pm.response.json();\r",
+							"    pm.expect(tempData.result).to.eql([]);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/search/```@\"",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"search",
+						"```@\""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - GET - Searching key which is not there - /search/hi- Test #1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Search - GET - Searching key which is not there - /search/hi- Test #1\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    const tempData=pm.response.json()\r",
+							"    pm.expect(tempData.result).to.be.an(\"array\");\r",
+							"    pm.expect(pm.response.json().result.length).to.be.above(0);;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/search/hi",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"search",
+						"hi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete - DELETE - Invalid Post key for the post  - /post/{{p_id}}/delete/{{key}} - Test #1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete - DELETE - Invalid Post key for the post  - /post/{{p_id}}/delete/{{key}} - Test #1 \", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"    const temp_data=pm.response.json();\r",
+							"    pm.expect(temp_data.err).to.eql(\"Invalid Post Key\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/post/{{p_id}}/delete/a1688e6fdb2d2ad767200dbae8eb78ce",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"post",
+						"{{p_id}}",
+						"delete",
+						"a1688e6fdb2d2ad767200dbae8eb78ce"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete - DELETE - Invalid User key for the post  - /post/{{p_id}}/delete/{{key}} - Test #2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete - DELETE - Invalid User key for the post  - /post/{{p_id}}/delete/{{key}} - Test #2 \", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"    const temp_data=pm.response.json();\r",
+							"    pm.expect(temp_data.err).to.eql(\"User Key Invalid\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/post/{{p_id}}/delete/5c39d930748d4f57fa3c15bd",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"post",
+						"{{p_id}}",
+						"delete",
+						"5c39d930748d4f57fa3c15bd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete - DELETE - Valid post key - /post/{{p_id}}/delete/{{key}} - Test #3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete - DELETE - Valid post key - /post/{{p_id}}/delete/{{key}} - Test #3 \", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/post/{{p_id}}/delete/{{p_key}}",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"post",
+						"{{p_id}}",
+						"delete",
+						"{{p_key}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Posts - POST - User sending the post  - /post - Test #4 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Posts - POST - User sending the post  - /post - Test #5 \", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    console.log(pm.response)\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.environment.set(\"p_id\", jsonData.id);\r",
+							"pm.environment.set(\"p_key\",jsonData.key);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"msg\":\"hi there\",\r\n  \"key\":\"{{ukey}}\",\r\n  \"user_id\":\"{{uid}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/post",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete - DELETE - Valid post key - /post/{{p_id}}/delete/{{key}} - Test #3 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete - DELETE - Valid post key - /post/{{p_id}}/delete/{{key}} - Test #3 \", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/post/{{p_id}}/delete/{{ukey}}",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"post",
+						"{{p_id}}",
+						"delete",
+						"{{ukey}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User - Delete User - Test Posts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Search User: Delete a user\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/user/{{uid}}",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"user",
+						"{{uid}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -12,3 +12,4 @@ echo "Running the test.sh"
 
 newman run users_collection.json -n 1
 
+newman run cs515.postman_collection.json -n 1
