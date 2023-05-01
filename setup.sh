@@ -20,11 +20,9 @@ apt-get update
 
 apt-get install -y mongodb-org
 
-service  daemon-reload start
+mkdir -p /data/db
 
-service  mongod start
-
-service mongod status
+mongod --fork --syslog
 
 location_of_python=$(which python3)
 
