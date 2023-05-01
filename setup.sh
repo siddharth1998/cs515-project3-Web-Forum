@@ -1,6 +1,6 @@
 #!/bin/sh
 
-apt-get install gnupg
+apt-get install gnupg -y
 
 cat /etc/os-release
 
@@ -28,12 +28,12 @@ apt-get update
 
 apt-get install -y mongodb-org
 
-systemctl daemon-reload
+service  daemon-reload start
 
 
-systemctl start mongod
+service  mongod start
 
-systemctl enable mongod
+# systemctl enable mongod
 
 location_of_python=$(which python3)
 
@@ -44,4 +44,4 @@ echo $location_of_python
 
 pip3 install -r requirement.txt
 
-$location_of_python -m flask run 
+# $location_of_python -m flask run 
