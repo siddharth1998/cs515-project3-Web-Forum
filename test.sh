@@ -1,3 +1,4 @@
 #!/bin/sh
 
-echo "Siddharth Jain roxx"
+newman run users_collection.json -n 1
+
