@@ -2,27 +2,29 @@
 
 echo "Running the setup.sh"
 
-apt-get install gnupg -y
+service mongod status
 
-apt install curl -y
+# apt-get install gnupg -y
+
+# apt install curl -y
+
+# curl -fsSL https://pgp.mongodb.com/server-6.0.asc | \
+#    gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg \
+#    --dearmor
+
+# touch /etc/apt/sources.list.d/mongodb-org-6.0.list
+
+# echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+
+# apt-get update
+
+# apt-get install -y mongodb-org
+
+# service  daemon-reload start
 
 
-curl -fsSL https://pgp.mongodb.com/server-6.0.asc | \
-   gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg \
-   --dearmor
-
-touch /etc/apt/sources.list.d/mongodb-org-6.0.list
-
-echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-
-apt-get update
-
-apt-get install -y mongodb-org
-
-service  daemon-reload start
-
-
-service  mongod start
+# service  mongod start
+# service mongod status
 
 # systemctl enable mongod
 
