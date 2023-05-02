@@ -16,6 +16,143 @@ We also worked in shifts in with majority of time in overlapping
  
 This is a Flask application that provides RESTful APIs for managing users and posts in a MongoDB database.
 
+### Base Line 
+
+## 1.  Creating a Post
+
+METHOD :: <code> POST </code>
+
+ENDPOINT :: <code>/post</code>
+
+PURPOSE :: Create a endpoint in which by sending an msg you can store the data into database and return some meta data. Meta data contains : 
+<ol>
+<li><b>the ID of the post</b></li><li><b>timestamp</b></li><li> <b>key</b></li> 
+</ol>
+ <i>Request Body</i> :: <br>
+
+ ``` 
+{
+    "msg":"Hi there, how are you , why are feeling so sad "
+}
+ ```
+
+ <i>Response</i> :: <br>
+ ```
+{
+    "id": 2,
+    "key": "12da79bc97910de3f688227b38c2334d",
+    "timestamp": "2023-05-02T00:34:23.292160+00:00"
+}
+ ```
+
+<p>User part: Now the task was to add user ID and User key ( something like a private key ) into the request body check if it is valid and post into the database. Now there will be metadata attached to the data in the database. Which you can see in the <code>GET</code>.</p> For example <br>
+<i>Request Body</i> :: <br>
+
+ ``` 
+{
+  "msg":"hi there",
+  "key":"{{ukey}}",
+  "user_id":"{{uid}}"
+}
+ ```
+
+ <i>Response</i> :: <br>
+ ```
+{
+    "id": 3,
+    "key": "711fb108e10920d24774d82bfe90674c",
+    "timestamp": "2023-05-01T18:11:42.141700+00:00"
+}
+ ```
+
+ 
+STATUS CODES :: <br>
+<code>200</code> -- When having sent correct request body <br>
+<code>400</code> -- When having sent wrongly formated request body <br>
+<code>404</code> -- When the user dose not exists while sending the request
+
+## 2.  Getting a post information
+
+METHOD :: <code> GET </code>
+
+ENDPOINT :: <code>/post/{{ id }}</code> <br>
+Note :: <i> Here the {{ id }} is the post id </i>
+
+PURPOSE :: Create a endpoint in which by sending a request to the endpoint, the data can be retrieved : 
+
+
+ <i>Response</i> :: <br>
+ ```
+{
+    "id": 3,
+    "key": "cca880dad0966bcf2bff10f0af35fd27",
+    "timestamp": "2023-05-02T01:21:12.537814+00:00",
+    "user_id": "3ad1116b5e753a75",
+    "username": "pikachu"
+}
+ ```
+
+
+<p>User part: Now if the post contains user data, then reponse will contain the username and user ID <br>
+
+ <i>Response</i> :: <br>
+ ```
+{
+    "id": 3,
+    "msg": "hi there",
+    "timestamp": "2023-05-02T01:21:12.537814+00:00",
+    "user_id": "3ad1116b5e753a75",
+    "username": "pikachu"
+}
+ ```
+As you can see if i post using a user and retrive the data of the post using the post id I will get back the information of the user who posted it. 
+
+STATUS CODES :: <br>
+<code>200</code> -- When having sent request for a exsisting post<br>
+<code>404</code> -- When had sent a request for a non exsisting post <br>
+<!-- <code>404</code> -- When the user dose not exists while sending the request -->
+
+
+## 3.  Deleting a post
+
+METHOD :: <code> DELETE </code>
+
+ENDPOINT :: <code>localhost:5000/post/{{p_id}}/delete/{{p_key}}</code> <br>
+Note :: <i> Here the {{ p_id }} is the post id and {{p_key}} is post key</i>
+
+PURPOSE :: Create a endpoint in which by sending a request to the endpoint, the deletion will occur on the basis of correct p_id and p_key pair: 
+
+
+ <i>Response</i> :: <br>
+ ```
+{
+    "id": 2,
+    "msg": "Hi there, how are you , why are feeling so sad ",
+    "timestamp": "2023-05-02T00:34:23.292160+00:00"
+}
+ ```
+
+
+<p>User part: Now if the post contains user data, then reponse will contain the username and user ID <br>
+
+ <i>Response</i> :: <br>
+ ```
+{
+    "id": 3,
+    "msg": "hi there",
+    "timestamp": "2023-05-02T01:21:12.537814+00:00",
+    "user_id": "3ad1116b5e753a75",
+    "username": "godfathersiddharthjain1"
+}
+ ```
+As you can see if i post using a user and retrive the data of the post using the post id I will get back the information of the user who posted it. 
+
+STATUS CODES :: <br>
+<code>200</code> -- When having sent request for a exsisting post<br>
+<code>404</code> -- When had sent a request for a non exsisting post <br>
+<!-- <code>404</code> -- When the user dose not exists while sending the request -->
+
+
 
 ### Extension:  
 
