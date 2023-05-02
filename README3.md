@@ -174,66 +174,6 @@ STATUS CODES :: <br>
 
 ### Extension:  
 
-#### 1. Searching the text in msg 
-
-METHOD :: <code> GET </code>
-
-ENDPOINT :: <code>localhost:5000/search/{{searching word}}</code> <br>
-Note :: <i> {{searching word}} is the word which will be searched from the database</i>
-
-PURPOSE :: Create a endpoint in which by sending a request to the endpoint, with the word which you want to search as the last parameter, will result in all the  : 
-
-For the request having URL :: <code>localhost:5000/search/hi</code>
-
- <i>Response</i> :: <br>
- ```
-{
-    "result": [
-        {
-            "id": 3,
-            "key": "3fdc015acd626f49f94c9d68ee817008",
-            "msg": "hi there",
-            "timestamp": "2023-05-02T01:55:38.431006+00:00",
-            "user_id": "3ad1116b5e753a75",
-            "username": "godfathersiddharthjain1"
-        },
-        {
-            "id": 2,
-            "key": "12da79bc97910de3f688227b38c2334d",
-            "msg": "Hi there, how are you , why are feeling so sad ",
-            "timestamp": "2023-05-02T00:34:23.292160+00:00"
-        },
-        {
-            "id": 1,
-            "key": "32f01d8fa92a519dcf96d99dd1a03fe7",
-            "msg": "Hi there, how are you , why are feeling so sad ",
-            "timestamp": "2023-05-02T00:34:19.940978+00:00"
-        }
-    ]
-}
- ```
-
-Now for the request with no data in the db for the searched keyword, you will get an empty list
-
-For the request having URL :: <code>localhost:5000/search/```@"</code>
-
- <i>Response</i> :: <br>
- ```
-{
-    "result": []
-}
- ```
-As you can see if i post using a user and retrive the data of the post using the post id I will get back the information of the user who posted it. 
-
-STATUS CODES :: <br>
-<code>200</code> -- When having sent request<br>
-
-As this is a search we don't need to send errors like 404,400, as this behavior dose not mean that there is error in key user or server, it means that you searched a key which was not there so status code will be 200 with an empty list :: we referenced the google search engine it dose not send   
-
-
-
-
-
 #### 1. Users and users keys
 
 Endpoint: /user
@@ -294,7 +234,10 @@ Implementation Details:
 
 This API creates a new user by generating a unique key and id, and inserting the user data into a MongoDB collection. Before inserting the user data, it validates the username to check whether it is unique and has a valid format. If there is any error during the validation or the database operation, it returns an appropriate error response with an error message.
 
-### 2. User profile
+This API does not support metadata other than username
+
+
+### 2. User profile - Add metadata to the user document
 
 Update User, update an existing user's metadata.
 
@@ -313,6 +256,14 @@ username: New username for the user. Optional.
 firstName: New first name for the user. Optional.
 lastName: New last name for the user. Optional.
 
+Example request body:
+{
+    "key": "3e47b3d3b4c9b2cc4d25ba68",
+    "username": "johndoejr"
+    "firstName": "john d",
+    "lastName": "junior",
+}
+
 Response Body
 {
 "message": "Updated user metadata successfully"
@@ -330,7 +281,7 @@ InternalError: An error occurred while processing the request.
 
 Get User and it's metadata.
 
-Request - GET /user/{id}
+###### Request - GET /user/{id} - To get user metadata
 
 This API endpoint returns the user object for the provided user ID.
 
@@ -343,35 +294,25 @@ Response
 
 Example Request
 
-GET /user/1234567890123456
+GET /user/f7a0a72d23888d84
 Example Response
 {
-"username": "johndoe",
-"firstName": "John",
-"lastName": "Doe",
-"id": "1234567890123456"
+    "key": "3e47b3d3b4c9b2cc4d25ba68",
+    "id": "f7a0a72d23888d84",
+    "username": "johndoe"
+    "firstName": "john d",
+    "lastName": "junior",
 }
 
-Request Example
-GET /user/1234567890123456
-
-Response Example
-{
-"username": "johndoe",
-"firstName": "John",
-"lastName": "Doe",
-"id": "1234567890123456",
-}
-
-### 3. Endpoint: POST /user/search
+###### Request - POST /user/search - To find the user with metadata
 
 This endpoint allows you to search for a user in the database based on certain criteria such as username, first name or last name.
 
 Request Body:
 {
-"username": "example_username",
-"firstName": "example_first_name",
-"lastName": "example_last_name"
+    "username": "example_username",
+    "firstName": "example_first_name",
+    "lastName": "example_last_name"
 }
 
 Note: At least one of the fields (key, id, username, firstName, lastName) is required in the request body.
@@ -379,11 +320,40 @@ Note: At least one of the fields (key, id, username, firstName, lastName) is req
 Responses:
 200 OK: Returns the details of the user(s) matching the search criteria.
 {
-"id": "example id",
-"key": "example key",
-"username": "example_username",
-"firstName": "example_first_name",
-"lastName": "example_last_name"
+    "id": "example id",
+    "key": "example key",
+    "username": "example_username",
+    "firstName": "example_first_name",
+    "lastName": "example_last_name"
+}
+
+Example request body:
+{
+    "username": "johndoe"
+}
+
+Example response body:
+{
+    "key": "3e47b3d3b4c9b2cc4d25ba68",
+    "id": "f7a0a72d23888d84",
+    "username": "johndoe"
+    "firstName": "john d",
+    "lastName": "junior",
+}
+
+Example request body:
+{
+    "firstName": "john d",
+    "lastName": "junior"
+}
+
+Example response body:
+{
+    "key": "3e47b3d3b4c9b2cc4d25ba68",
+    "id": "f7a0a72d23888d84",
+    "username": "johndoe"
+    "firstName": "john d",
+    "lastName": "junior",
 }
 
 400 Bad Request: Returned if the request body is invalid. It may contain the following messages:
@@ -401,30 +371,75 @@ Responses:
 
 500 Internal Server Error: Returned if any internal error occurs. It may contain the following message: 'Internal server error'
 
- 4. Date range base queries
+
+##### 3. Date range base queries
 
 This API endpoint accepts HTTP GET requests with a JSON payload containing a date range filter. The endpoint returns a list of posts that fall within the specified date range.
 
 Method: GET - /post/date-range
 Body:
 {
-"startDatetime": "YYYY-MM-DDTHH:mm:ss.sssZ",
-"endDatetime": "YYYY-MM-DDTHH:mm:ss.sssZ"
+    "startDatetime": "YYYY-MM-DDTHH:mm:ss.sssZ",
+    "endDatetime": "YYYY-MM-DDTHH:mm:ss.sssZ"
 }
 
 startDatetime and endDatetime are ISO formatted timestamps representing the start and end of the date range respectively.
+
+Get all post after startDatetime:
+Request body: {
+    "startDatetime": "2023-04-01T02:59:59.584893+00:00"
+}
 
 Response:
 Status Code: 200 OK
 Body:
 {
-"posts": [{
-"title": "post_title",
-"content": "post_content",
-"timestamp": "YYYY-MM-DDTHH:mm:ss.sssZ",
-},
-...
-]
+    "posts": [{
+        "id": 3,
+        "msg": "hi there",
+        "timestamp": "2023-04-02T02:59:59.584893+00:00",
+        "user_id": "3ad1116b5e753a75",
+        "username": "godfather1"
+    }, {
+        "id": 5,
+        "msg": "how are you?",
+        "timestamp": "2023-05-02T02:59:59.584893+00:00"
+    }]
+}
+
+Get all post before endDatetime:
+Request body: {
+    "endDatetime": "2023-05-01T02:59:59.584893+00:00"
+}
+
+Response:
+Status Code: 200 OK
+Body:
+{
+    "posts": [{
+        "id": 3,
+        "msg": "hi there",
+        "timestamp": "2023-04-02T02:59:59.584893+00:00"
+    }]
+}
+
+Get all post between startDatetime and endDatetime:
+Request body: {
+    "startDatetime": "2023-04-01T02:59:59.584893+00:00",
+    "endDatetime": "2023-05-01T02:59:59.584893+00:00"
+}
+
+Response:
+Status Code: 200 OK
+Body:
+{
+    "posts": [{
+        "id": 3,
+        "msg": "hi there",
+        "timestamp": "2023-04-02T02:59:59.584893+00:00",
+        "user_id": "3ad1116b5e753a75",
+        "username": "godfather1"
+    }]
 }
 
 The response body contains a list of posts that fall within the specified date range. Each post contains its title, content, timestamp, and author details.
@@ -440,17 +455,73 @@ Errors:
 "message": "Internal server error"
 }
 
-  
+#### 4. Fulltext Search - Searching the text in msg
+
+METHOD :: <code> GET </code>
+
+ENDPOINT :: <code>localhost:5000/search/{{searching word}}</code> <br>
+Note :: <i> {{searching word}} is the word which will be searched from the database</i>
+
+PURPOSE :: Create a endpoint in which by sending a request to the endpoint, with the word which you want to search as the last parameter, will result in all the  : 
+
+For the request having URL :: <code>localhost:5000/search/hi</code>
+
+ <i>Response</i> :: <br>
+ ```
+{
+    "result": [
+        {
+            "id": 3,
+            "key": "3fdc015acd626f49f94c9d68ee817008",
+            "msg": "hi there",
+            "timestamp": "2023-05-02T01:55:38.431006+00:00",
+            "user_id": "3ad1116b5e753a75",
+            "username": "godfathersiddharthjain1"
+        },
+        {
+            "id": 2,
+            "key": "12da79bc97910de3f688227b38c2334d",
+            "msg": "Hi there, how are you , why are feeling so sad ",
+            "timestamp": "2023-05-02T00:34:23.292160+00:00"
+        },
+        {
+            "id": 1,
+            "key": "32f01d8fa92a519dcf96d99dd1a03fe7",
+            "msg": "Hi there, how are you , why are feeling so sad ",
+            "timestamp": "2023-05-02T00:34:19.940978+00:00"
+        }
+    ]
+}
+ ```
+
+Now for the request with no data in the db for the searched keyword, you will get an empty list
+
+For the request having URL :: <code>localhost:5000/search/```@"</code>
+
+ <i>Response</i> :: <br>
+ ```
+{
+    "result": []
+}
+ ```
+As you can see if i post using a user and retrive the data of the post using the post id I will get back the information of the user who posted it. 
+
+STATUS CODES :: <br>
+<code>200</code> -- When having sent request<br>
+
+As this is a search we don't need to send errors like 404,400, as this behavior dose not mean that there is error in key user or server, it means that you searched a key which was not there so status code will be 200 with an empty list :: we referenced the google search engine it dose not send
+
 
 ## 5. Persistence
 
-The Persistence Extension is designed to add persistence to the baseline behaviour. With this extension, the server becomes persistent, which means that it will hold onto posts between restarts.
+We are using mongodb for presistence - Pymongo. The Persistence Extension is designed to add persistence to the baseline behaviour. With this extension, the server becomes persistent, which means that it will hold onto posts between restarts.
 
 #### Requirements:
 Python 3.6 or higher
 Flask 2.0 or higher
+Pymongo 4 or higher
 
-With persistence, your server becomes much more robust and reliable.
+With persistence, our server becomes much more robust and reliable.
 
   
 ## Test cases:
@@ -830,7 +901,6 @@ Send a DELETE request to /post/{{p_id}}/delete/invalid_key.
 Expect the response to have a status code of 400.
 Expect the response JSON data's err field to be equal to "invalid key".
 
-  
 
 #### Reference:
 ##### Postman published documentation for the users api:
