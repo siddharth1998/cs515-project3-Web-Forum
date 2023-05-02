@@ -164,7 +164,7 @@ ENDPOINT :: <code>localhost:5000/post/{{p_id}}/delete/{{u_key}}</code> <br>
 As you can see if i post using a user and retrive the data of the post using the post id I will get back the information of the user who posted it. 
 
 STATUS CODES :: <br>
-<code>200</code> -- When having sent request for a exsisting post<br>
+<code>200</code> -- When having sent request for a exsisting post and having the correct key pair with id<br>
 <code>404</code> -- When sent a request for a non exsisting post <br>
 <code>403</code> -- When sent a request for a wrong key pair <br>
 
@@ -213,28 +213,22 @@ For the request having URL :: <code>localhost:5000/search/hi</code>
 }
  ```
 
-ENDPOINT :: <code>localhost:5000/post/{{p_id}}/delete/{{u_key}}</code> <br>
+Now for the request with no data in the db for the searched keyword, you will get an empty list
 
-
-<p>User part: When you send the correct {{p_id}} ( post id ) and correct {{u_key}} ( user key ) you will be able to get the information of the post with userdetails  <br>
+For the request having URL :: <code>localhost:5000/search/```@"</code>
 
  <i>Response</i> :: <br>
  ```
 {
-    "id": 4,
-    "key": "45728255a0dd5b3ad3244ec1f40f1043",
-    "timestamp": "2023-05-02T02:20:26.899674+00:00",
-    "user_id": "3ad1116b5e753a75",
-    "username": "pikachu"
+    "result": []
 }
  ```
 As you can see if i post using a user and retrive the data of the post using the post id I will get back the information of the user who posted it. 
 
 STATUS CODES :: <br>
-<code>200</code> -- When having sent request for a exsisting post<br>
-<code>404</code> -- When sent a request for a non exsisting post <br>
-<code>403</code> -- When sent a request for a wrong key pair <br>
+<code>200</code> -- When having sent request<br>
 
+As this is a search we don't need to send errors like 404,400, as this behavior dose not mean that there is error in key user or server, it means that you searched a key which was not there so status code will be 200 with an empty list :: we referenced the google search engine it dose not send   
 
 
 
