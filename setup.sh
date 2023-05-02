@@ -22,7 +22,6 @@
 
     mkdir -p /data/db
 
-    exec mongod &    
 
     # Trying with this 
 
@@ -35,4 +34,5 @@
 
     pip3 install -r requirement.txt
 
+    exec mongod &    
     # $location_of_python -m flask run 
