@@ -7,17 +7,40 @@
 ## URL : https://github.com/siddharth1998/cs515-project3-Web-Forum
 
 
-## Estimated Man Hours : 30 hours ( combining both bandwidth )
+## Estimated Man Hours : 45 hours ( combining both bandwidth )
 
 We also worked in shifts in with majority of time in overlapping
 
 ## Documentation
 
+
+## How we tested our code
+Running the Tests
+
+To run users api test - ``newman users_collection.json`` <br>
+To run posts api test - ``newman cs515.postman_collection.json``
+
+<p>The above collection contains exhaustive test cases for each of the apis</p>
  
 This is a Flask application that provides RESTful APIs for managing users and posts in a MongoDB database.
 
 We thought if we published our api documentation of the baseline and extensions, it would be better for the TA to run them as it would reduce their work. So here's the published links:
 
+## Any bugs or issues which were not able to resolve ? 
+NA
+
+## An example of difficult issue and how we resolved it? 
+setup.sh was difficult to create. Due to the fact that the given environment was container based environment, so having two process running simultaneously was difficult task, normaly for the architecture given mongodb server will run on different server and the flask application will run on other server. So we ran the server in background. 
+
+## Here are the list of 5 extension which we tackled? 
+<ol>
+<li>Users and user keys</li>
+<li>User Profiles</li>
+<li>Date and time based range quries</li>
+<li>Full text search</li>
+<li>Persistence</li>
+</ol>
+Documentation of these extension can be found in this README
 
 #### Reference:
 ##### Postman published documentation for the users api:
@@ -26,7 +49,9 @@ We thought if we published our api documentation of the baseline and extensions,
 ##### Postman documentation for the posts api:
 <span style="background-color: #FFFF00">https://documenter.getpostman.com/view/12623814/2s93eU2EXX</span>
 
-
+## Running POC
+You can check the POC of implementation: 
+https://drive.google.com/file/d/1qEyI7r_6ajjmIGESLfDqrp3oHN78orbI/view?usp=share_link
 
 ### Base Line 
 
@@ -525,6 +550,17 @@ With persistence, our server becomes much more robust and reliable.
 
   
 ## Test cases:
+
+
+## Reference:
+## For each testcase discussed below you can go throught published postman collection by click on the link
+##### Postman published documentation for the users api:
+<span style="background-color: #FFFF00">https://documenter.getpostman.com/view/12623814/2s93eU2DzZ</span>
+
+##### Postman documentation for the posts api:
+<span style="background-color: #FFFF00">https://documenter.getpostman.com/view/12623814/2s93eU2EXX</span>
+
+
 
 Running the Tests
 
