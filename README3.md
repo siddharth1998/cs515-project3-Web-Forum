@@ -174,6 +174,72 @@ STATUS CODES :: <br>
 
 ### Extension:  
 
+#### 1. Searching the text in msg 
+
+METHOD :: <code> GET </code>
+
+ENDPOINT :: <code>localhost:5000/search/{{searching word}}</code> <br>
+Note :: <i> {{searching word}} is the word which will be searched from the database</i>
+
+PURPOSE :: Create a endpoint in which by sending a request to the endpoint, with the word which you want to search as the last parameter, will result in all the  : 
+
+For the request having URL :: <code>localhost:5000/search/hi</code>
+
+ <i>Response</i> :: <br>
+ ```
+{
+    "result": [
+        {
+            "id": 3,
+            "key": "3fdc015acd626f49f94c9d68ee817008",
+            "msg": "hi there",
+            "timestamp": "2023-05-02T01:55:38.431006+00:00",
+            "user_id": "3ad1116b5e753a75",
+            "username": "godfathersiddharthjain1"
+        },
+        {
+            "id": 2,
+            "key": "12da79bc97910de3f688227b38c2334d",
+            "msg": "Hi there, how are you , why are feeling so sad ",
+            "timestamp": "2023-05-02T00:34:23.292160+00:00"
+        },
+        {
+            "id": 1,
+            "key": "32f01d8fa92a519dcf96d99dd1a03fe7",
+            "msg": "Hi there, how are you , why are feeling so sad ",
+            "timestamp": "2023-05-02T00:34:19.940978+00:00"
+        }
+    ]
+}
+ ```
+
+ENDPOINT :: <code>localhost:5000/post/{{p_id}}/delete/{{u_key}}</code> <br>
+
+
+<p>User part: When you send the correct {{p_id}} ( post id ) and correct {{u_key}} ( user key ) you will be able to get the information of the post with userdetails  <br>
+
+ <i>Response</i> :: <br>
+ ```
+{
+    "id": 4,
+    "key": "45728255a0dd5b3ad3244ec1f40f1043",
+    "timestamp": "2023-05-02T02:20:26.899674+00:00",
+    "user_id": "3ad1116b5e753a75",
+    "username": "pikachu"
+}
+ ```
+As you can see if i post using a user and retrive the data of the post using the post id I will get back the information of the user who posted it. 
+
+STATUS CODES :: <br>
+<code>200</code> -- When having sent request for a exsisting post<br>
+<code>404</code> -- When sent a request for a non exsisting post <br>
+<code>403</code> -- When sent a request for a wrong key pair <br>
+
+
+
+
+
+
 #### 1. Users and users keys
 
 Endpoint: /user
