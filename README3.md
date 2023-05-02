@@ -724,155 +724,110 @@ Send a GET request to "localhost:5000/post/date-range" with request body {"start
 Verify that the response has a status code of 200.
 
  
- ## Create Posts - /post
+## Create Posts - /post
 
 ##### Test #1 
 This test case tests if the POST request to create a new post is successful and returns a 200 status code. It also extracts the id and key values from the response and sets them as environment variables.
 
 Steps:
 Send a POST request to http://127.0.0.1:5000/post with the request body:
-{
-"msg":"hi there"
-}
+``{
+    "msg":"hi there"
+}``
 Check if the response has a status code of 200.
 
-Delete - DELETE - Valid post key - /post/{{p_id}}/delete/{{key}} - Deleting created post
+#### Test #2
+##### Delete - DELETE - Valid post key - /post/{{p_id}}/delete/{{key}} - Deleting created post
 
 This test case tests if the DELETE request to delete a created post is successful and returns a 200 status code.
 
-
 Test Steps:
 Send a DELETE request to localhost:5000/post/{{p_id}}/delete/{{p_key}}.
-
 Check if the response has a status code of 200.
 
-User - POST - Create user - Test #2
-
+#### Test #3
+##### User - POST - Create user
 This test case tests if the POST request to create a new user is successful and returns a 200 status code. It also extracts the id and key values from the response and sets them as environment variables.
 
- 
-Test Steps:
+Steps:
 Send a POST request to 127.0.0.1:5000/user with the request body:
-{
-"username": "godfather1"
-}
+``{
+    "username": "godfather1"
+}``
+
 Check if the response has a status code of 200.
 
-Posts - POST - User Post without the key - /post - Test #3
-
+##### Test #4
+##### Posts - POST - User Post without the key - /post
 This test case tests if the POST request to create a new post without a key is unsuccessful and returns a 400 status code.
 
-  
-
-Test Steps:
-
-  
-
+Steps:
 Send a POST request to http://127.0.0.1:5000/post with the request body:
-
-
 {
-
-"msg":"hi there",
-
-"user_id": {{uid}}
-
+    "msg":"hi there",
+    "user_id": {{uid}}
 }
 
 Check if the response has a status code of 400.
 
-  
 
-Test case 1: Posts - POST - User Post without the id - /post - Test #4
+#### Test case 4: 
+##### Posts - POST - User Post without the id - /post
 
 This test case tests whether a user can post a message to the API without specifying an ID. The test expects a response with a status code of 400, indicating a bad request.
 
   
 
-Test case 2: Posts - POST - User sending the post - /post - Test #5
+#### Test case 5: 
+##### Posts - POST - User sending the post - /post
 
 This test case tests whether a user can post a message to the API with the required fields. The test expects a response with a status code of 200, indicating a successful request. Additionally, the test extracts the ID and key fields from the response and saves them to the Postman environment for use in subsequent requests.
 
   
 
-Test case 3: Posts - POST - User Post without body - /post - Test #2
+#### Test case 6: 
+##### Posts - POST - User Post without body - /post
 
 This test case tests whether a user can post a message to the API without specifying any fields. The test expects a response with a status code of 400, indicating a bad request.
 
-  
 
-Test case 4: Posts - POST - Post with integer - /post - Test #2
+#### Test case 7: 
+##### Posts - POST - Post with integer - /post
 
 This test case tests whether a user can post a message to the API with an integer value in the message field. The test expects a response with a status code of 400 and an error message indicating that the message value should be a string.
 
   
-
-Test #1: Viewing an existing post
-
-  
-
+#### Test case 8: Viewing an existing post
 Set up the environment by assigning a valid post ID to p_id.
-
 Send a GET request to /post/{{p_id}}.
-
 Expect the response to have a status code of 200.
-
 Expect the response JSON data's id field to match the value of p_id.
 
-  
 
-Test #2: Viewing a non-existent post
-
-  
-
+#### Test case 9: Viewing a non-existent post
 Set up the environment by assigning a non-existent post ID to p_id (e.g., 100000000).
-
 Send a GET request to /post/{{p_id}}.
-
 Expect the response to have a status code of 404.
-
 Expect the response JSON data's err field to be equal to "id not found".
 
-Test Plan for Endpoint: GET /search/{{query}}
 
-  
-
-Test #1: Searching for a non-existent key
-
-  
-
+#### Test case #10: Searching for a non-existent key
 Send a GET request to /search/```@.
-
 Expect the response to have a status code of 200.
-
 Expect the response JSON data's result field to be an empty array.
 
-  
 
-Test #2: Searching for an existing key
-
-  
-
+#### Test case #11: Searching for an existing key
 Send a GET request to /search/hi.
-
 Expect the response to have a status code of 200.
-
 Expect the response JSON data's result field to be an array with a length greater than zero.
-
 Test Plan for Endpoint: DELETE /post/{{p_id}}/delete/{{key}}
 
   
-
-Test #1: Deleting a post with an invalid key
-
-  
-
+#### Test case #12: Deleting a post with an invalid key
 Set up the environment by assigning a valid post ID to p_id.
-
 Send a DELETE request to /post/{{p_id}}/delete/invalid_key.
-
 Expect the response to have a status code of 400.
-
 Expect the response JSON data's err field to be equal to "invalid key".
 
   
