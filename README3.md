@@ -16,6 +16,18 @@ We also worked in shifts in with majority of time in overlapping
  
 This is a Flask application that provides RESTful APIs for managing users and posts in a MongoDB database.
 
+We thought if we published our api documentation of the baseline and extensions, it would be better for the TA to run them as it would reduce their work. So here's the published links:
+
+
+#### Reference:
+##### Postman published documentation for the users api:
+<span style="background-color: #FFFF00">https://documenter.getpostman.com/view/12623814/2s93eU2DzZ</span>
+
+##### Postman documentation for the posts api:
+<span style="background-color: #FFFF00">https://documenter.getpostman.com/view/12623814/2s93eU2EXX</span>
+
+
+
 ### Base Line 
 
 ## 1.  Creating a Post
@@ -109,7 +121,7 @@ As you can see if i post using a user and retrive the data of the post using the
 
 STATUS CODES :: <br>
 <code>200</code> -- When having sent request for a exsisting post<br>
-<code>404</code> -- When had sent a request for a non exsisting post <br>
+<code>404</code> -- When  sent a request for a non exsisting post <br>
 <!-- <code>404</code> -- When the user dose not exists while sending the request -->
 
 
@@ -126,30 +138,36 @@ PURPOSE :: Create a endpoint in which by sending a request to the endpoint, the 
  <i>Response</i> :: <br>
  ```
 {
-    "id": 2,
-    "msg": "Hi there, how are you , why are feeling so sad ",
-    "timestamp": "2023-05-02T00:34:23.292160+00:00"
+    "id": 3,
+    "key": "cca880dad0966bcf2bff10f0af35fd27",
+    "timestamp": "2023-05-02T01:21:12.537814+00:00",
+    "user_id": "3ad1116b5e753a75",
+    "username": "pikachu"
 }
  ```
 
+ENDPOINT :: <code>localhost:5000/post/{{p_id}}/delete/{{u_key}}</code> <br>
 
-<p>User part: Now if the post contains user data, then reponse will contain the username and user ID <br>
+
+<p>User part: When you send the correct {{p_id}} ( post id ) and correct {{u_key}} ( user key ) you will be able to get the information of the post with userdetails  <br>
 
  <i>Response</i> :: <br>
  ```
 {
-    "id": 3,
-    "msg": "hi there",
-    "timestamp": "2023-05-02T01:21:12.537814+00:00",
+    "id": 4,
+    "key": "45728255a0dd5b3ad3244ec1f40f1043",
+    "timestamp": "2023-05-02T02:20:26.899674+00:00",
     "user_id": "3ad1116b5e753a75",
-    "username": "godfathersiddharthjain1"
+    "username": "pikachu"
 }
  ```
 As you can see if i post using a user and retrive the data of the post using the post id I will get back the information of the user who posted it. 
 
 STATUS CODES :: <br>
 <code>200</code> -- When having sent request for a exsisting post<br>
-<code>404</code> -- When had sent a request for a non exsisting post <br>
+<code>404</code> -- When sent a request for a non exsisting post <br>
+<code>403</code> -- When sent a request for a wrong key pair <br>
+
 <!-- <code>404</code> -- When the user dose not exists while sending the request -->
 
 
@@ -804,3 +822,4 @@ Expect the response JSON data's err field to be equal to "invalid key".
 https://documenter.getpostman.com/view/12623814/2s93eU2DzZ
 
 ##### Postman documentation for the posts api:
+https://documenter.getpostman.com/view/12623814/2s93eU2EXX
