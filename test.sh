@@ -10,5 +10,7 @@ exec flask run -p 5000 &
 
 echo "Running the test.sh"
 
+sleep 3
+
 newman run cs515.postman_collection.json -n 2
 newman run users_collection.json -n 2
